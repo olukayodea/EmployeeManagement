@@ -1,3 +1,5 @@
+using EmployeeManagement.Data;
+using EmployeeManagement.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.InMemory;
 namespace EmployeeManagement
@@ -23,11 +25,28 @@ namespace EmployeeManagement
                     });
             });
 
+            // Register the EmployeeRepository for dependency injection
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            // Add controllers
+            builder.Services.AddControllers();
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
             // Build the app
             var app = builder.Build();
+            // Enable Swagger in development environment
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI( c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+                    c.RoutePrefix = string.Empty;
+                });
+            }
             app.UseCors("AllowAll");
-
-            app.MapGet("/", () => "Hello World!");
+            app.MapControllers();
 
             app.Run();
         }
