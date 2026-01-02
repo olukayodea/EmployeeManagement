@@ -12,17 +12,7 @@ namespace EmployeeManagement
             var builder = WebApplication.CreateBuilder(args);
             // Add services to the container.
             builder.Services.AddDbContext<Data.AppDbContext>(options =>
-                options.UseSqlServer(
-                    "Data Source=OLUKAYODE\\SQLEXPRESS;" +
-                    "Database=Employees;" +
-                    "Integrated Security=True;" +
-                    "Persist Security Info=False;" +
-                    "Pooling=False;" +
-                    "MultipleActiveResultSets=False;" +
-                    "Encrypt=True;" +
-                    "TrustServerCertificate=True"
-                    ));
-            //options.UseInMemoryDatabase("EmployeeDb"));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 
             // Configure CORS to allow requests from any origin
             builder.Services.AddCors(options =>
